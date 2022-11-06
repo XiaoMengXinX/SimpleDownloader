@@ -59,6 +59,7 @@ func (d *DownloadTask) setFileInfo(r *http.Response) {
 }
 
 func (d *DownloadTask) openTempFiles() (err error) {
+	d.tempFiles = make([]*os.File, d.Downloader.DownloadRoutine)
 	if d.acceptRange {
 		for i := 0; i < d.Downloader.DownloadRoutine; i++ {
 			tempFile, err := os.Create(fmt.Sprintf("%s.%d", d.savePath, i))
