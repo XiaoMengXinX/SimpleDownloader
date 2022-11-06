@@ -55,7 +55,7 @@ func (d *DownloadTask) Download() (err error) {
 	var ranges [][]int64
 	var errChan chan error
 	var threads int
-	if d.acceptRange {
+	if d.acceptRange && d.Downloader.DownloadRoutine > 1 {
 		errChan = make(chan error, d.Downloader.DownloadRoutine)
 		ranges = d.splitBytes()
 		threads = d.Downloader.DownloadRoutine
