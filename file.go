@@ -30,8 +30,7 @@ func (d *DownloadTask) initFiles() (err error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusPartialContent {
-		//TODO: handle error
-		return fmt.Errorf(resp.Status)
+		return fmt.Errorf("%s", resp.Status)
 	}
 
 	d.setFileInfo(resp)
