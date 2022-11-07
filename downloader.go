@@ -71,6 +71,7 @@ func (d *DownloadTask) Download() (err error) {
 		ranges = [][]int64{{0, d.fileSize - 1}}
 		threads = 1
 	}
+	d.writtenBytes = 0
 
 	ctx, cancel := context.WithTimeout(context.Background(), d.Downloader.TimeOut)
 
