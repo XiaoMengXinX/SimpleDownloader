@@ -6,16 +6,21 @@ import (
 	"time"
 )
 
+const defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+
+// NewDownloader is to create a new downloader
 func NewDownloader() *Downloader {
 	return &Downloader{
 		SavePath:        "./",
 		HttpProxy:       HttpProxy{},
 		TimeOut:         60 * time.Second,
 		DownloadRoutine: 4,
+		UserAgent:       defaultUserAgent,
 		//BreakPoint:    true,
 	}
 }
 
+// NewDownloadTask is to create a new download task belongs to the downloader
 func (d *Downloader) NewDownloadTask(URL string) (*DownloadTask, error) {
 	urlData, err := url.Parse(URL)
 	if err != nil {
@@ -36,6 +41,7 @@ func (d *Downloader) NewDownloadTask(URL string) (*DownloadTask, error) {
 	}, nil
 }
 
+// DownloadWithChannel returns a channel to receive the error
 func (d *DownloadTask) DownloadWithChannel() (ch chan error) {
 	ch = make(chan error, 1)
 	go func() {
@@ -44,6 +50,7 @@ func (d *DownloadTask) DownloadWithChannel() (ch chan error) {
 	return ch
 }
 
+// Download starts the download task
 func (d *DownloadTask) Download() (err error) {
 	if err = d.initClient(); err != nil {
 		return err

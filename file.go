@@ -19,6 +19,9 @@ func (d *DownloadTask) initFiles() (err error) {
 		return err
 	}
 
+	if d.Downloader.UserAgent != "" {
+		req.Header.Set("User-Agent", d.Downloader.UserAgent)
+	}
 	if d.headerHost != "" {
 		req.Host = d.headerHost
 	}
