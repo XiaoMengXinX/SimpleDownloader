@@ -59,22 +59,23 @@ func (d *DownloadTask) setFileInfo(r *http.Response) {
 }
 
 func (d *DownloadTask) openTempFiles() (err error) {
-	d.tempFiles = make([]*os.File, d.Downloader.DownloadRoutine)
+	var tempFiles []*os.File
 	if d.acceptRange {
 		for i := 0; i < d.Downloader.DownloadRoutine; i++ {
 			tempFile, err := os.Create(fmt.Sprintf("%s.%d", d.savePath, i))
 			if err != nil {
 				return err
 			}
-			d.tempFiles = append(d.tempFiles, tempFile)
+			tempFiles = append(tempFiles, tempFile)
 		}
 	} else {
 		tempFile, err := os.Create(d.savePath)
 		if err != nil {
 			return err
 		}
-		d.tempFiles = append(d.tempFiles, tempFile)
+		tempFiles = append(tempFiles, tempFile)
 	}
+	d.tempFiles = tempFiles
 	return nil
 }
 
