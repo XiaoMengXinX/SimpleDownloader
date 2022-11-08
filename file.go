@@ -110,12 +110,13 @@ func (d *DownloadTask) mergeFiles() (err error) {
 			return err
 		}
 	}
-	d.cleanTempFiles()
+	d.CleanTempFiles()
 
 	return
 }
 
-func (d *DownloadTask) cleanTempFiles() {
+// CleanTempFiles delete the temp files of the task
+func (d *DownloadTask) CleanTempFiles() {
 	for _, f := range d.tempFiles {
 		f.Close()
 		os.Remove(f.Name())
