@@ -28,6 +28,7 @@ type WriterF func(b []byte) (n int, err error)
 
 func (f WriterF) Write(b []byte) (n int, err error) { return f(b) }
 
+// CalculateSpeed returns the download speed of the current task.
 func (d *DownloadTask) CalculateSpeed(elapse time.Duration) string {
 	writtenBytes := d.GetWrittenBytes()
 	time.Sleep(elapse)
