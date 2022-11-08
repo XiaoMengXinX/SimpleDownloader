@@ -16,7 +16,7 @@ func NewDownloader() *Downloader {
 		TimeOut:         60 * time.Second,
 		DownloadRoutine: 4,
 		UserAgent:       defaultUserAgent,
-		BreakPoint:      true,
+		BreakPoint:      false,
 	}
 }
 
