@@ -26,6 +26,7 @@ type DownloadTask struct {
 	writtenBytes int64
 	acceptRange  bool
 	ignoreCert   bool
+	headers      map[string]string
 	client       *http.Client
 	tempFiles    []*os.File
 }
@@ -52,6 +53,12 @@ func (d *DownloadTask) ForceHttps() *DownloadTask {
 // ForceHttp set the scheme to http
 func (d *DownloadTask) ForceHttp() *DownloadTask {
 	d.Scheme = "http"
+	return d
+}
+
+// AddHeader add a http header to the task
+func (d *DownloadTask) AddHeader(key, value string) *DownloadTask {
+	d.headers[key] = value
 	return d
 }
 
@@ -208,6 +215,12 @@ func (d *DownloadTask) start(ctx context.Context, i int, start, end int64) (err 
 	}
 	if d.headerHost != "" {
 		req.Host = d.headerHost
+	}
+	for k, v := range d.headers {
+		if s := strings.ToLower(k); s == "user-agent" || s == "host" {
+			continue
+		}
+		req.Header.Set(k, v)
 	}
 
 	resp, err := d.client.Do(req)

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -24,6 +25,12 @@ func (d *DownloadTask) initFiles() (err error) {
 	}
 	if d.headerHost != "" {
 		req.Host = d.headerHost
+	}
+	for k, v := range d.headers {
+		if s := strings.ToLower(k); s == "user-agent" || s == "host" {
+			continue
+		}
+		req.Header.Set(k, v)
 	}
 
 	resp, err := d.client.Do(req)
