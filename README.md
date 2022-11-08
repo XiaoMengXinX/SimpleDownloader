@@ -11,32 +11,32 @@ A simple multi-thread downloader package for Go.
 package main
 
 import (
-	"fmt"
-	"time"
-
-	downloader "github.com/XiaoMengXinX/SimpleDownloader"
+    "fmt"
+    "time"
+    "github.com/XiaoMengXinX/SimpleDownloader"
 )
 
 func main() {
-	d := downloader.NewDownloader().SetDownloadRoutine(4)
+    d := downloader.NewDownloader().SetDownloadRoutine(4)
 
-	url := "https://file-examples.com/storage/fe8c7eef0c6364f6c9504cc/2017/04/file_example_MP4_1920_18MG.mp4"
-	task, _ := d.NewDownloadTask(url)
-	ch := task.ForceMultiThread().DownloadWithChannel()
+    url := "https://xve.me/DemoVideo"
+    task, _ := d.NewDownloadTask(url)
+    ch := task.ForceMultiThread().SetFileName("demo.mp4").DownloadWithChannel()
 
 loop:
-	for {
-		select {
-		case err := <-ch:
-			if err != nil {
-				panic(err)
-			}
-			break loop
-		default:
-			fmt.Printf("Download Speed: %s\n", task.CalculateSpeed(time.Millisecond*200))
-		}
-	}
+    for {
+        select {
+        case err := <-ch:
+            if err != nil {
+                panic(err)
+            }
+            break loop
+        default:
+            fmt.Printf("Download Speed: %s\n", task.CalculateSpeed(time.Millisecond*200))
+        }
+    }
 }
+
 ```
 
 ## Documentation
