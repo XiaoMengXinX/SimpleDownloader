@@ -8,7 +8,7 @@ type Downloader struct {
 	TimeOut         time.Duration
 	UserAgent       string
 	DownloadRoutine int
-	//BreakPoint    bool
+	BreakPoint      bool
 }
 
 type HttpProxy struct {
@@ -53,10 +53,8 @@ func (d *Downloader) SetDownloadRoutine(routine int) *Downloader {
 	return d
 }
 
-/*
-	//TODO: implement
-	func (d *Downloader) SetBreakPoint(breakPoint bool) *Downloader {
-		d.BreakPoint = breakPoint
-		return d
-	}
-*/
+// SetBreakPoint set the break point download
+func (d *Downloader) SetBreakPoint(isEnabled bool) *Downloader {
+	d.BreakPoint = isEnabled
+	return d
+}

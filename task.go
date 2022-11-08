@@ -197,6 +197,13 @@ func (d *DownloadTask) splitBytes() [][]int64 {
 		if i == threads-1 {
 			end = d.fileSize - 1
 		}
+		if d.Downloader.BreakPoint {
+			fileStat, _ := d.tempFiles[i].Stat()
+			if size := fileStat.Size(); (start+size) <= end && size > 0 {
+				start += size - 1024*1024
+				d.tempFiles[i].Seek(size-1024*1024, 0)
+			}
+		}
 		ranges = append(ranges, []int64{start, end})
 	}
 
@@ -206,6 +213,10 @@ func (d *DownloadTask) splitBytes() [][]int64 {
 func (d *DownloadTask) start(ctx context.Context, i int, start, end int64) (err error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", d.url, nil)
 	if err != nil {
+		return err
+	}
+
+	if start == end {
 		return err
 	}
 

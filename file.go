@@ -72,7 +72,7 @@ func (d *DownloadTask) openTempFiles() (err error) {
 	var tempFiles []*os.File
 	if d.acceptRange {
 		for i := 0; i < d.Downloader.DownloadRoutine; i++ {
-			tempFile, err := os.Create(fmt.Sprintf("%s.%d", d.savePath, i))
+			tempFile, err := os.OpenFile(fmt.Sprintf("%s.%d", d.savePath, i), os.O_CREATE|os.O_RDWR, 0666)
 			if err != nil {
 				return err
 			}

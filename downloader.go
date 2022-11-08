@@ -16,7 +16,7 @@ func NewDownloader() *Downloader {
 		TimeOut:         60 * time.Second,
 		DownloadRoutine: 4,
 		UserAgent:       defaultUserAgent,
-		//BreakPoint:    true,
+		BreakPoint:      true,
 	}
 }
 
@@ -85,7 +85,9 @@ func (d *DownloadTask) Download() (err error) {
 		case err := <-errChan:
 			if err != nil {
 				cancel()
-				d.cleanTempFiles()
+				if !d.Downloader.BreakPoint {
+					d.cleanTempFiles()
+				}
 				return err
 			}
 		}
