@@ -3,7 +3,6 @@ package downloader
 import (
 	"context"
 	"net/url"
-	"time"
 )
 
 const defaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
@@ -13,7 +12,7 @@ func NewDownloader() *Downloader {
 	return &Downloader{
 		SavePath:        "./",
 		HttpProxy:       HttpProxy{},
-		TimeOut:         60 * time.Second,
+		TimeOut:         0,
 		DownloadRoutine: 4,
 		UserAgent:       defaultUserAgent,
 		BreakPoint:      false,
@@ -74,7 +73,14 @@ func (d *DownloadTask) Download() (err error) {
 		threads = 1
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), d.Downloader.TimeOut)
+	var ctx context.Context
+	var cancel context.CancelFunc
+	if d.Downloader.TimeOut > 0 {
+		ctx, cancel = context.WithTimeout(context.Background(), d.Downloader.TimeOut)
+	} else {
+		ctx, cancel = context.WithCancel(context.Background())
+	}
+	d.cancelFunc = cancel
 
 	for i, ranges := range ranges {
 		go func(i int, start, end int64) {

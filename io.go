@@ -37,5 +37,8 @@ func (d *DownloadTask) CalculateSpeed(elapse time.Duration) string {
 	if res > 1024 {
 		return fmt.Sprintf("%.2f MB/s", float64(res)/1024)
 	}
+	if res < 1 {
+		return "0 KB/s"
+	}
 	return fmt.Sprintf("%d KB/s", res)
 }

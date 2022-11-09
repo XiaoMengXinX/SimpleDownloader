@@ -27,6 +27,7 @@ type DownloadTask struct {
 	acceptRange  bool
 	ignoreCert   bool
 	headers      map[string]string
+	cancelFunc   context.CancelFunc
 	client       *http.Client
 	tempFiles    []*os.File
 }
@@ -139,6 +140,11 @@ func (d *DownloadTask) GetWrittenBytes() int64 {
 // GetFileSize return the content length of the task
 func (d *DownloadTask) GetFileSize() int64 {
 	return d.fileSize
+}
+
+// Cancel the task
+func (d *DownloadTask) Cancel() {
+	d.cancelFunc()
 }
 
 func (d *DownloadTask) initClient() (err error) {
