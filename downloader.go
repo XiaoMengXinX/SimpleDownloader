@@ -88,6 +88,8 @@ func (d *DownloadTask) Download() (err error) {
 				cancel()
 				if !d.Downloader.BreakPoint {
 					d.CleanTempFiles()
+				} else {
+					d.closeTempFiles()
 				}
 				return err
 			}
