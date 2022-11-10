@@ -62,7 +62,7 @@ func (d *DownloadTask) setFileInfo(r *http.Response) {
 			d.fileName = path.Base(d.Path)
 		}
 	}
-	if r.Header.Get("Accept-Ranges") != "" || r.Header.Get("Accept-ranges") != "" || r.Header.Get("accept-ranges") != "" || r.Header.Get("Accept-Range") != "" {
+	if r.Header.Get("Accept-Ranges") != "" {
 		d.acceptRange = true
 	}
 	d.fileSize = r.ContentLength

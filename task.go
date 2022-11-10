@@ -97,9 +97,8 @@ func (d *DownloadTask) WithResolvedIp(ip string) *DownloadTask {
 // This can be used to download a file through your own hosted reverse proxy
 // server.
 //
-// Notice that if you want to request with a specific port, there is only
-// WithResolvedIpOnHost seems to work. And this option will default ignore
-// the SSL certificate verification.
+// Notice that enable this option will default ignore the SSL certificate
+// verification.
 func (d *DownloadTask) WithResolvedIpOnHost(ip string) *DownloadTask {
 	d.AddHostNameToHeader(d.Host)
 	d.ReplaceHostName(ip)
@@ -168,10 +167,13 @@ func (d *DownloadTask) initClient() (err error) {
 			var dialer net.Dialer
 			s := strings.Split(addr, ":")
 			s[0] = strings.Split(d.resolvedIP, ":")[0]
+			s1 := strings.Split(d.resolvedIP, ":")
+			if len(s1) > 1 && len(s) > 1 {
+				s[1] = s1[1]
+			}
 			return dialer.DialContext(ctx, network, strings.Join(s, ":"))
 		}
 		transport.DialContext = dialFuncWithCtx
-		transport.DialTLSContext = dialFuncWithCtx
 	}
 	if d.headerHost != "" {
 		d.IgnoreCertificateVerify()
