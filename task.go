@@ -207,7 +207,7 @@ func (d *DownloadTask) splitBytes() [][]int64 {
 		}
 		if d.Downloader.BreakPoint {
 			fileStat, _ := d.tempFiles[i].Stat()
-			if size := fileStat.Size(); (start+size) <= end && size > 0 {
+			if size := fileStat.Size(); (start+size)-1 <= end && size > 0 {
 				var backSize int64 = 1024 * 1024
 				if blockSize < backSize {
 					backSize = size / 4
