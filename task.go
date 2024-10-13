@@ -59,6 +59,9 @@ func (d *DownloadTask) ForceHttp() *DownloadTask {
 
 // AddHeader add a http header to the task
 func (d *DownloadTask) AddHeader(key, value string) *DownloadTask {
+	if d.headers == nil {
+		d.headers = make(map[string]string)
+	}
 	d.headers[key] = value
 	return d
 }
