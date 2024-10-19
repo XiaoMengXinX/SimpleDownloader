@@ -232,11 +232,10 @@ func (d *DownloadTask) start(ctx context.Context, i int, start, end int64) (err 
 		return err
 	}
 
-	if start == end {
-		return err
+	if start <= end {
+		req.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", start, end))
 	}
 
-	req.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", start, end))
 	if d.Downloader.UserAgent != "" {
 		req.Header.Set("User-Agent", d.Downloader.UserAgent)
 	}
@@ -255,6 +254,10 @@ func (d *DownloadTask) start(ctx context.Context, i int, start, end int64) (err 
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusPartialContent && resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("unexpected HTTP status: %s", resp.Status)
+	}
 
 	_, err = d.copy(d.tempFiles[i], resp.Body)
 	return err

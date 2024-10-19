@@ -82,14 +82,14 @@ func (d *DownloadTask) Download() (err error) {
 	}
 	d.cancelFunc = cancel
 
-	for i, ranges := range ranges {
+	for i, r := range ranges {
 		go func(i int, start, end int64) {
 			errChan <- d.start(ctx, i, start, end)
-		}(i, ranges[0], ranges[1])
+		}(i, r[0], r[1])
 	}
 	for i := 0; i < threads; i++ {
 		select {
-		case err := <-errChan:
+		case err = <-errChan:
 			if err != nil {
 				cancel()
 				if !d.Downloader.BreakPoint {

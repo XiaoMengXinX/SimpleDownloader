@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -40,12 +41,16 @@ func (d *DownloadTask) initFiles() (err error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusPartialContent {
-		return fmt.Errorf("%s", resp.Status)
+		if d.fileName == "" {
+			d.fileName = path.Base(d.Path)
+		}
+		d.acceptRange = false
+		d.fileSize = -1
+	} else {
+		d.setFileInfo(resp)
 	}
 
-	d.setFileInfo(resp)
-	d.savePath = fmt.Sprintf("%s/%s", d.Downloader.SavePath, d.fileName)
-
+	d.savePath = filepath.Join(d.Downloader.SavePath, d.fileName)
 	return d.openTempFiles()
 }
 
