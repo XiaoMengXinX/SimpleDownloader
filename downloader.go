@@ -45,6 +45,7 @@ func (d *DownloadTask) DownloadWithChannel() (ch chan error) {
 	ch = make(chan error, 1)
 	go func() {
 		ch <- d.Download()
+		close(ch)
 	}()
 	return ch
 }
